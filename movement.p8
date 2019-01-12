@@ -79,11 +79,10 @@ end
 p=player(spx(1)+4, spx(1)+4)
 
 function _update()
- btnd=false
- if(btn(0)) then p.push(p,-1, 0) btnd=true end
- if(btn(1)) then p.push(p,1, 0) btnd=true end
- if(btn(2)) then p.push(p,0, -1) btnd=true end
- if(btn(3)) then p.push(p,0, 1) btnd=true end
+ if(btn(0)) then p.push(p,-1, 0) end
+ if(btn(1)) then p.push(p,1, 0) end
+ if(btn(2)) then p.push(p,0, -1) end
+ if(btn(3)) then p.push(p,0, 1) end
  p.update(p)
 end
 
