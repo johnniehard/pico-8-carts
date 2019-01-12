@@ -50,8 +50,8 @@ function player(x, y)
         mvalx=mget(pxs(_.nl.x),pxs(_.l.y))
         mvaly=mget(pxs(_.l.x),pxs(_.nl.y))
         // add velocity to location
-        if(mvalx==0) then _.l.x+=_.v.x end
-        if(mvaly==0) then _.l.y+=_.v.y end
+        if(not fget(mvalx,0)) then _.l.x+=_.v.x end
+        if(not fget(mvaly,0)) then _.l.y+=_.v.y end
         // damping
         _.pv={x=_.v.x,y=_.v.y}
         _.v.x*=_.d
