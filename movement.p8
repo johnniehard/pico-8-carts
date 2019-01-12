@@ -15,11 +15,13 @@ function player(x, y)
     // velocity
     p.v={x=0,y=0}
     // max velocity
-    p.mv=2
+    p.mv=1
     // flip x
     p.fx=false
     // flip y
     p.fy=false
+    // damping
+    p.d=0
 
     p.push = function(_, x, y)
         // add force to acceleration
@@ -37,11 +39,14 @@ function player(x, y)
         if(_.v.x < -_.mv) then _.v.x=-_.mv end
         if(_.v.y < -_.mv) then _.v.y=-_.mv end
         // sprite flip
-        if(_.v.x >= 0) then _.fx=false else _.fx=true end
-        if(_.v.y >= 0) then _.fy=false else _.fy=true end
+        if(_.v.x>0) then _.fx=false elseif(_.v.x<0) then _.fx=true end
+        if(_.v.y>0) then _.fy=false elseif(_.v.y<0) then _.fy=true end
         // add velocity to location
         _.l.x+=_.v.x
         _.l.y+=_.v.y
+        // damping
+        _.v.x*=_.d
+        _.v.y*=_.d
         // clear acceleration
         _.a.x*=0
         _.a.y*=0
@@ -54,11 +59,11 @@ function player(x, y)
     return p
 end
 
+// Helper functions
 // pixels to sprite unit
 function pxs(px)
     return (px-px%8)/8
 end
-
 // sprite unit to pixels
 function spx(s)
     px=s*8
@@ -82,7 +87,7 @@ function _draw()
 
     p.draw(p)
 
-    print(pxs(17),0,0,15)
+    print(pxs(p.l.x),0,0,15)
 
     
 end
