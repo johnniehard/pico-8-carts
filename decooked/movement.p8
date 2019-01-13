@@ -2,38 +2,40 @@ pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
 //hello
-
+debug=true
 // sprite scale
 s=8
 
-function player(x, y)
-    local p = {}
+function mover(x, y, sprites)
+    local m = {}
     // location
-    p.l={x=x,y=y}
+    m.l={x=x,y=y}
     // next location
-    p.nl={x=x,y=y}
+    m.nl={x=x,y=y}
     // acceleration
-    p.a={x=0,y=0}
+    m.a={x=0,y=0}
     // velocity, previous velocity
-    p.v={x=0,y=0} p.pv={x=0,y=0}
+    m.v={x=0,y=0} m.pv={x=0,y=0}
     // max velocity
-    p.mv=2
-    // flip x
-    p.fx=false
+    m.mv=2
+    // flip xplaymover
+    m.fx=false
     // flip y
-    p.fy=false
+    m.fy=false
     // damping
-    p.d=0
+    m.d=0
     // sprite number
-    p.sn=2
+    m.sn=2
+    // sprites
+    m.ss=sprites
 
-    p.push = function(_, x, y)
+    m.push = function(_, x, y)
         // add force to acceleration
         _.a.x+=x
         _.a.y+=y
     end
 
-    p.update = function(_)
+    m.update = function(_)
         // add acceleration to velocity
         _.v.x+=_.a.x
         _.v.y+=_.a.y
@@ -79,17 +81,17 @@ function player(x, y)
         _.animate(_)
     end
 
-    p.animate = function(_)
-        _.sn=2
-        if(_.pv.y > 0) then _.sn=3 end
-        if(_.pv.y < 0) then _.sn=4 end
+    m.animate = function(_)
+        if(_.pv.x != 0) then _.sn=_.ss[1] end
+        if(_.pv.y > 0) then _.sn=_.ss[2] end
+        if(_.pv.y < 0) then _.sn=_.ss[3] end
     end
 
-    p.draw = function(_)
+    m.draw = function(_)
         spr(_.sn,_.l.x-4, _.l.y-4,1,1,_.fx, false)
     end
 
-    return p
+    return m
 end
 
 // Helper functions
@@ -103,7 +105,7 @@ function spx(s)
     return px-px%8
 end
 
-p=player(spx(1)+4, spx(1)+4)
+p=mover(spx(1)+4, spx(1)+4, {2,3,4})
 
 function _update()
  if(btn(0)) then p.push(p,-1, 0) end
@@ -118,11 +120,14 @@ function _draw()
 
     map(0,0,0,0,16,16)
 
-    rect(pxs(p.l.x)*s,pxs(p.l.y)*s,pxs(p.l.x)*s+7,pxs(p.l.y)*s+7,7)
+    if debug then
+        rect(pxs(p.l.x)*s,pxs(p.l.y)*s,pxs(p.l.x)*s+7,pxs(p.l.y)*s+7,7)
+    end
+
     p.draw(p)
 
-    print(pxs(p.l.x),0,0,7)
-    
+    if debug then pset(p.l.x,p.l.y,7) end
+    if debug then print(pxs(p.l.x),0,0,7) end
 end
 
 __gfx__
