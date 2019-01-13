@@ -107,9 +107,7 @@ function player()
     if(btn(2)) then _.push(_,0, -0.2) end
     if(btn(3)) then _.push(_,0, 0.2) end
     // dash
-    if(btnp(4)) then
-        _.push(_,_.a.x*_.dp,_.a.y*_.dp)
-    end
+    if(btnp(4)) then _.push(_,_.a.x*_.dp,_.a.y*_.dp) end
  end
  return p
 end
