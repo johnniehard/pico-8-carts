@@ -17,7 +17,7 @@ function player(x, y)
     // velocity, previous velocity
     p.v={x=0,y=0} p.pv={x=0,y=0}
     // max velocity
-    p.mv=1
+    p.mv=2
     // flip x
     p.fx=false
     // flip y
