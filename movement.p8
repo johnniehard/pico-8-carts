@@ -46,12 +46,28 @@ function player(x, y)
         if(_.v.x>0) then _.fx=false elseif(_.v.x<0) then _.fx=true end
         if(_.v.y>0) then _.fy=false elseif(_.v.y<0) then _.fy=true end
         // collision detection
-        _.nl={x=_.l.x+_.v.x,y=_.l.y+_.v.y}
-        mvalx=mget(pxs(_.nl.x),pxs(_.l.y))
-        mvaly=mget(pxs(_.l.x),pxs(_.nl.y))
+        _.nlx={x=_.l.x+_.v.x,y=_.l.y}
+        ulx=mget(pxs(_.nlx.x-2),pxs(_.nlx.y-4))
+        urx=mget(pxs(_.nlx.x+1),pxs(_.nlx.y-4))
+        llx=mget(pxs(_.nlx.x-2),pxs(_.nlx.y+3))
+        lry=mget(pxs(_.nlx.x+1),pxs(_.nlx.y+3))
+        _.nly={x=_.l.x,y=_.l.y+_.v.y}
+        uly=mget(pxs(_.nly.x-2),pxs(_.nly.y-4))
+        ury=mget(pxs(_.nly.x+1),pxs(_.nly.y-4))
+        lly=mget(pxs(_.nly.x-2),pxs(_.nly.y+3))
+        lry=mget(pxs(_.nly.x+1),pxs(_.nly.y+3))
+
         // add velocity to location
-        if(not fget(mvalx,0)) then _.l.x+=_.v.x end
-        if(not fget(mvaly,0)) then _.l.y+=_.v.y end
+        if(_.v.x > 0) then
+            if(not fget(urx,0) and not fget(lrx,0)) then _.l.x+=_.v.x end
+        elseif(_.v.x < 0) then
+            if(not fget(ulx,0) and not fget(llx,0)) then _.l.x+=_.v.x end
+        end
+        if(_.v.y > 0) then
+            if(not fget(lly,0) and not fget(lry,0)) then _.l.y+=_.v.y end
+        elseif(_.v.y < 0) then
+            if(not fget(uly,0) and not fget(ury,0)) then _.l.y+=_.v.y end
+        end
         // damping
         _.pv={x=_.v.x,y=_.v.y}
         _.v.x*=_.d
@@ -65,8 +81,8 @@ function player(x, y)
 
     p.animate = function(_)
         _.sn=2
-        if(_.pv.y > 0) then _.sn=3
-        elseif(_.pv.y < 0) then _.sn=4 end
+        if(_.pv.y > 0) then _.sn=3 end
+        if(_.pv.y < 0) then _.sn=4 end
     end
 
     p.draw = function(_)
