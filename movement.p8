@@ -50,7 +50,7 @@ function player(x, y)
         ulx=mget(pxs(_.nlx.x-2),pxs(_.nlx.y-4))
         urx=mget(pxs(_.nlx.x+1),pxs(_.nlx.y-4))
         llx=mget(pxs(_.nlx.x-2),pxs(_.nlx.y+3))
-        lry=mget(pxs(_.nlx.x+1),pxs(_.nlx.y+3))
+        lrx=mget(pxs(_.nlx.x+1),pxs(_.nlx.y+3))
         _.nly={x=_.l.x,y=_.l.y+_.v.y}
         uly=mget(pxs(_.nly.x-2),pxs(_.nly.y-4))
         ury=mget(pxs(_.nly.x+1),pxs(_.nly.y-4))
