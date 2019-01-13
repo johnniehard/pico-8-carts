@@ -98,13 +98,17 @@ function player()
  local p=mover(spx(1)+4, spx(1)+4, {2,3,4})
  // items
  p.is={}
- p.extupdate = function()
-    if(btn(0)) then p.push(p,-0.2, 0) end
-    if(btn(1)) then p.push(p,0.2, 0) end
-    if(btn(2)) then p.push(p,0, -0.2) end
-    if(btn(3)) then p.push(p,0, 0.2) end
+ // dash power
+ p.dp=20
+ p.extupdate = function(_)
+    // walk
+    if(btn(0)) then _.push(_,-0.2, 0) end
+    if(btn(1)) then _.push(_,0.2, 0) end
+    if(btn(2)) then _.push(_,0, -0.2) end
+    if(btn(3)) then _.push(_,0, 0.2) end
+    // dash
     if(btnp(4)) then
-        p.push(p,p.a.x*10,p.a.y*10)
+        _.push(_,_.a.x*_.dp,_.a.y*_.dp)
     end
  end
  return p
