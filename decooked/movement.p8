@@ -2,7 +2,7 @@ pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
 //hello
-debug=true
+-- debug=true
 // sprite scale
 s=8
 
@@ -17,13 +17,13 @@ function mover(x, y, sprites)
     // velocity, previous velocity
     m.v={x=0,y=0} m.pv={x=0,y=0}
     // max velocity
-    m.mv=2
+    m.mv=10
     // flip xplaymover
     m.fx=false
     // flip y
     m.fy=false
     // damping
-    m.d=0
+    m.d=0.75
     // sprite number
     m.sn=2
     // sprites
@@ -36,6 +36,7 @@ function mover(x, y, sprites)
     end
 
     m.update = function(_)
+        if _.extupdate != nil then _.extupdate(_) end
         // add acceleration to velocity
         _.v.x+=_.a.x
         _.v.y+=_.a.y
@@ -49,16 +50,15 @@ function mover(x, y, sprites)
         if(_.v.y>0) then _.fy=false elseif(_.v.y<0) then _.fy=true end
         // collision detection
         _.nlx={x=_.l.x+_.v.x,y=_.l.y}
-        ulx=mget(pxs(_.nlx.x-2),pxs(_.nlx.y-4))
-        urx=mget(pxs(_.nlx.x+1),pxs(_.nlx.y-4))
-        llx=mget(pxs(_.nlx.x-2),pxs(_.nlx.y+3))
-        lrx=mget(pxs(_.nlx.x+1),pxs(_.nlx.y+3))
+        local ulx=mget(pxs(_.nlx.x-2),pxs(_.nlx.y-4))
+        local urx=mget(pxs(_.nlx.x+1),pxs(_.nlx.y-4))
+        local llx=mget(pxs(_.nlx.x-2),pxs(_.nlx.y+3))
+        local lrx=mget(pxs(_.nlx.x+1),pxs(_.nlx.y+3))
         _.nly={x=_.l.x,y=_.l.y+_.v.y}
-        uly=mget(pxs(_.nly.x-2),pxs(_.nly.y-4))
-        ury=mget(pxs(_.nly.x+1),pxs(_.nly.y-4))
-        lly=mget(pxs(_.nly.x-2),pxs(_.nly.y+3))
-        lry=mget(pxs(_.nly.x+1),pxs(_.nly.y+3))
-
+        local uly=mget(pxs(_.nly.x-2),pxs(_.nly.y-4))
+        local ury=mget(pxs(_.nly.x+1),pxs(_.nly.y-4))
+        local lly=mget(pxs(_.nly.x-2),pxs(_.nly.y+3))
+        local lry=mget(pxs(_.nly.x+1),pxs(_.nly.y+3))
         // add velocity to location
         if(_.v.x > 0) then
             if(not fget(urx,0) and not fget(lrx,0)) then _.l.x+=_.v.x end
@@ -94,6 +94,22 @@ function mover(x, y, sprites)
     return m
 end
 
+function player()
+ local p=mover(spx(1)+4, spx(1)+4, {2,3,4})
+ // items
+ p.is={}
+ p.extupdate = function()
+    if(btn(0)) then p.push(p,-0.2, 0) end
+    if(btn(1)) then p.push(p,0.2, 0) end
+    if(btn(2)) then p.push(p,0, -0.2) end
+    if(btn(3)) then p.push(p,0, 0.2) end
+    if(btnp(4)) then
+        p.push(p,p.a.x*10,p.a.y*10)
+    end
+ end
+ return p
+end
+
 // Helper functions
 // pixels to sprite unit
 function pxs(px)
@@ -105,13 +121,9 @@ function spx(s)
     return px-px%8
 end
 
-p=mover(spx(1)+4, spx(1)+4, {2,3,4})
+p=player()
 
 function _update()
- if(btn(0)) then p.push(p,-1, 0) end
- if(btn(1)) then p.push(p,1, 0) end
- if(btn(2)) then p.push(p,0, -1) end
- if(btn(3)) then p.push(p,0, 1) end
  p.update(p)
 end
 
